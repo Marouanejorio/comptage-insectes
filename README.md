@@ -40,9 +40,9 @@ Les images ne sont pas dans le dépôt (voir `.gitignore`).
 
 **1. Prise en main.** 1335 images sur 23 journées. On garde les 7 journées d'au moins 50 images : 1101 images, 1931 boîtes annotées (1,75 par image, max 6). Le découpage train / valid / test mélange les journées, et il n'y a pas d'apprentissage, donc je travaille sur toutes les images.
 
-**2. Analyse des annotations.** Avant de détecter, j'ai vérifié les boîtes annotées avec un indice de contraste (intérieur de la boîte comparé à un anneau autour). Parmi les boîtes les moins contrastées, environ la moitié sont des **ombres**, pas des insectes : le dataset d'origine avait une classe `shadow` qui a été fusionnée dans `insect`.
+**2. Analyse des annotations.** Avant de détecter, j'ai vérifié les boîtes annotées avec un indice de contraste (intérieur de la boîte comparé à un anneau autour). Parmi les boîtes les moins contrastées, environ la moitié sont des **ombres**, le reste sont des petits insectes.
 
-**3. Analyse des ombres.** Une boîte est considérée comme une ombre si une boîte proche (moins de 2 hauteurs) est nettement plus contrastée. Résultat : **au moins 149 ombres (7,7 % des boîtes)**. C'est un minimum, les ombres dont l'insecte est hors champ ne sont pas trouvées. La vérité terrain compte donc aussi des ombres.
+**3. Analyse des ombres.** Une boîte est considérée comme une ombre si une boîte proche (moins de 2 hauteurs) est nettement plus contrastée. Résultat : **au moins 149 ombres (7,7 % des boîtes)**. C'est un minimum, les ombres dont l'insecte est hors champ ne sont pas trouvées. 
 
 **4. Trois solutions testées**, chacune mesurée sur les 1101 images :
 
@@ -50,13 +50,13 @@ Les images ne sont pas dans le dépôt (voir `.gitignore`).
 |---|---|
 | 1. Seuillage adaptatif | seuil local (`adaptiveThreshold`), contours, filtre de taille |
 | 2. Soustraction de fond | fond = médiane des 10 images avant et 10 après (même jour), on garde ce qui est devenu plus sombre, seuil puis composantes connexes |
-| 3. Soustraction de fond + flou | pareil, avec un flou gaussien 11×11 sur l'image et le fond pour absorber les petits mouvements de la plateforme |
+| 3. Soustraction de fond + flou | pareil, avec un flou gaussien 11×11 |
 
 ## Mesures
 
 - **MAE** : erreur moyenne en nombre d'insectes par image
 - **Biais** : > 0 on compte trop, < 0 pas assez
-- **OA** (cours de reconnaissance de formes) : part des images comptées exactement, à partir de la matrice de confusion vrai nombre / nombre détecté
+- **OA**  : part des images comptées exactement, à partir de la matrice de confusion vrai nombre / nombre détecté
 
 ## Résultats
 
@@ -71,7 +71,7 @@ Les images ne sont pas dans le dépôt (voir `.gitignore`).
 - La solution 1 trouve les insectes mais aussi tout le décor sombre (bords de fleurs, coupelles, vis, sol) : aucune image juste.
 - La solution 2 efface le décor fixe, mais explose quand la plateforme bouge avec le vent (les contours des fleurs ressortent).
 - Le flou de la solution 3 divise la MAE par plus de 3.
-- En enlevant les ombres de la vérité, le biais de la solution 3 passe de +0,36 à +0,50 : elle compte une partie des ombres.
+
 
 ## Ce qui ne marche pas
 
