@@ -1,0 +1,12 @@
+# données (à télécharger sur Zenodo)
+train/
+valid/
+test/
+*.zip
+data.yaml
+README.dataset.txt
+README.roboflow.txt
+
+# sorties et fichiers temporaires
+.ipynb_checkpoints/
+__pycache__/
